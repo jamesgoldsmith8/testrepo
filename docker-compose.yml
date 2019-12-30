@@ -1,0 +1,143 @@
+version: '3.7'
+
+networks:
+  frontend:
+  account_localhost:
+  address_localhost:
+  complex_localhost:
+  room_localhost:
+  tenant_localhost:
+
+services:
+  account:
+    # build:
+    #   context: account/. 
+    #   dockerfile: .docker/dockerfile
+    image: revaturexyz/account:dev
+    volumes:
+      - ./account:/usr/src/app/
+    ports:
+      - "11080:80"
+    networks:
+      - frontend
+      - account_localhost
+    depends_on:
+      - accountdata
+    environment:
+      ConnectionStrings__AccountDb: 'Host=accountdata;Database=account;Username=postgres;Password=Pass@word'
+
+  accountdata:
+    image: postgres:12.0
+    networks:
+      - account_localhost
+    environment:
+      POSTGRES_PASSWORD: 'Pass@word'
+  ########################################################################################
+  address:
+    # build:
+    #   context: address/.
+    #   dockerfile: .docker/dockerfile
+    image: revaturexyz/address:dev
+    volumes:
+      - ./address:/usr/src/app/
+    ports:
+      - "12080:80"
+    networks:
+      - frontend
+      - address_localhost
+    depends_on:
+      - addressdata
+    environment:
+      ConnectionStrings__AddressDb: 'Host=addressdata;Database=address;Username=postgres;Password=Pass@word'
+
+  addressdata:
+    image: postgres:12.0
+    networks:
+      - address_localhost
+    environment:
+      POSTGRES_PASSWORD: 'Pass@word'
+  ########################################################################################
+  complex:
+    # build:
+    #   context: complex/.
+    #   dockerfile: .docker/dockerfile
+    image: revaturexyz/complex:dev
+    volumes:
+      - ./complex:/usr/src/app/
+    ports:
+      - "13080:80"
+    networks:
+      - frontend
+      - complex_localhost
+    depends_on:
+      - complexdata
+    environment:
+      ConnectionStrings__ComplexDb: 'Host=complexdata;Database=complex;Username=postgres;Password=Pass@word'
+
+  complexdata:
+    image: postgres:12.0
+    networks:
+      - complex_localhost
+    environment:
+      POSTGRES_PASSWORD: 'Pass@word'
+  ########################################################################################
+  room:
+    # build:
+    #   context: room/.
+    #   dockerfile: .docker/dockerfile
+    image: revaturexyz/room:dev
+    volumes:
+      - ./room:/usr/src/app/
+    ports:
+      - "14080:80"
+    networks:
+      - frontend
+      - room_localhost
+    depends_on:
+      - roomdata
+    environment:
+      ConnectionStrings__RoomDb: 'Host=roomdata;Database=room;Username=postgres;Password=Pass@word'
+
+  roomdata:
+    image: postgres:12.0
+    networks:
+      - room_localhost
+    environment:
+      POSTGRES_PASSWORD: 'Pass@word'
+  ########################################################################################
+  tenant:
+    # build:
+    #   context: tenant/.
+    #   dockerfile: .docker/dockerfile
+    image: revaturexyz/tenant:dev
+    volumes:
+      - ./tenant:/usr/src/app/
+    ports:
+      - "15080:80"
+    networks:
+      - frontend
+      - tenant_localhost
+    depends_on:
+      - tenantdata
+    environment:
+      ConnectionStrings__TenantDb: 'Host=tenantdata;Database=tenant;Username=postgres;Password=Pass@word'
+
+  tenantdata:
+    image: postgres:12.0
+    networks:
+      - tenant_localhost
+    environment:
+      POSTGRES_PASSWORD: 'Pass@word'
+  ########################################################################################
+  housing:
+    # build:
+    #   context: housing/.
+    #   dockerfile: .docker/dockerfile
+    image: revaturexyz/housing:dev
+    volumes:
+      - ./housing:/usr/src/app/
+    ports:
+      - 10080:80
+      - 10443:443
+    networks:
+      - frontend
